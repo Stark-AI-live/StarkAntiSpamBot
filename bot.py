@@ -10,6 +10,7 @@ API_ID = "YOUR_APP_ID"
 API_HASH = "YOUR_APP_HASH"
 BOT_TOKEN = "YOUR_BOT_TOKEN"
 OWNER_ID = "OWNER_ID"
+API_URL = "telegram.starkai.live"
 
 app = Client(name='STARK-API',api_id=API_ID,api_hash=API_HASH,bot_token=BOT_TOKEN)
 
@@ -31,7 +32,7 @@ async def add_admin(_, message: Message):
       else:
         return await message.reply("Tag any user to make Admin!")
         
-      data = requests.get(f"https://telegram.starkai.live/addsudo?user_id={user_id}&api_key={API_KEY}")
+      data = requests.get(f"https://{API_URL}/addsudo?user_id={user_id}&api_key={API_KEY}")
       r = data.json()
       msg = r["message"]
       return await message.reply(msg)
@@ -48,7 +49,7 @@ async def rm_admin(_, message: Message):
       else:
         return await message.reply("Tag Admin to Remove!")
         
-      data = requests.get(f"https://telegram.starkai.live/rmsudo?user_id={user_id}&api_key={API_KEY}")
+      data = requests.get(f"https://{API_URL}/rmsudo?user_id={user_id}&api_key={API_KEY}")
       r = data.json()
       msg = r["message"]
       return await message.reply(msg)
@@ -56,7 +57,7 @@ async def rm_admin(_, message: Message):
 @app.on_message(filters.command("get_api") & filters.private)
 async def get_api(_, message: Message):
   user_id = message.from_user.id
-  data = requests.get(f"https://telegram.starkai.live/get_api_key?user_id={user_id}")
+  data = requests.get(f"https://{API_URL}/get_api_key?user_id={user_id}")
   r = data.json()
   msg = r["message"]
   return await message.reply(msg)
@@ -65,7 +66,7 @@ async def get_api(_, message: Message):
 @app.on_message(filters.command("check"))
 async def check(_, message: Message):
   user_id = message.from_user.id
-  data = requests.get(f"https://telegram.starkai.live/check?user_id={user_id}")
+  data = requests.get(f"https://{API_URL}/check?user_id={user_id}")
   if data.status_code == 201:
     return await message.reply("You are Not Banned!")
   else:
@@ -84,7 +85,7 @@ async def get_trust(_, message: Message):
   else:
     user_id = message.from_user.id
     
-  data = requests.get(f"https://telegram.starkai.live/gettrust?user_id={user_id}")
+  data = requests.get(f"https://{API_URL}/gettrust?user_id={user_id}")
   if data.status_code == 404:
     return await message.reply("Data Not Found or User Maybe System Admin")
   else:
@@ -96,7 +97,7 @@ async def get_trust(_, message: Message):
 @app.on_message(filters.command("status"))
 async def status(_, message: Message):
     user_id = message.from_user.id
-    data = requests.get(f"https://telegram.starkai.live/check_user?user_id={user_id}")
+    data = requests.get(f"https://{API_URL}/check_user?user_id={user_id}")
     r = data.json()
     if user_id == OWNER_ID:
         is_admin = "Onwer"
@@ -112,7 +113,7 @@ async def status(_, message: Message):
 async def check_message(client, message):
   msg = message.text
   user_id = message.from_user.id
-  data = requests.get(f"https://telegram.starkai.live/check_message?user_id={user_id}&message={msg}")
+  data = requests.get(f"https://{API_URL}/check_message?user_id={user_id}&message={msg}")
   if data.status_code == 200:
     return
   else:
