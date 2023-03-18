@@ -127,6 +127,7 @@ async def admins(_, message: Message):
 
 @app.on_message(filters.command("ban"))
 async def ban(_, message: Message):
+      from_id = message.from_user.id
       if len(message.command) < 2:
          return await message.reply("Reason Not Provided")
 
@@ -137,7 +138,7 @@ async def ban(_, message: Message):
       else:
         return await message.reply("Tag any user to Ban")
         
-      data = requests.get(f"https://{API_URL}/ban_user?user_id={user_id}&api_key={ADMIN_API_KEY}&reason={reason}")
+      data = requests.get(f"https://{API_URL}/ban_user?user_id={user_id}&api_key={ADMIN_API_KEY}&reason={reason}&admin_id={from_id}")
       r = data.json()
       msg = r["message"]
       return await message.reply(msg)
@@ -145,13 +146,14 @@ async def ban(_, message: Message):
 @app.on_message(filters.command("unban"))
 async def unban(_, message: Message):
       reason = message.text
+      from_id = message.from_user.id
       if message.reply_to_message:
         reply = message.reply_to_message
         user_id = reply.from_user.id
       else:
         return await message.reply("Tag any user to Unban")
         
-      data = requests.get(f"https://{API_URL}/unban_user?user_id={user_id}&api_key={ADMIN_API_KEY}")
+      data = requests.get(f"https://{API_URL}/unban_user?user_id={user_id}&api_key={ADMIN_API_KEY}&admin_id={from_id}")
       r = data.json()
       msg = r["message"]
       return await message.reply(msg)
